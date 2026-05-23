@@ -1,33 +1,3 @@
-If your live GitHub Pages link is literally displaying the raw code text on the screen like prose instead of executing it, your browser is treating it as a plain text file rather than an active webpage.
-
-This usually points to one of two quick configuration hiccups on GitHub. Here is how to fix it:
-
-### 1. Ensure the File Extension is strictly `.html`
-
-If you accidentally saved or named the file `index.html.txt` or `index.txt`, GitHub will serve it as a plain text document.
-
-* Go to your repository on GitHub.
-* Look closely at the file name. It must be precisely **`index.html`** (all lowercase, no trailing `.txt`).
-* If it has an extra extension, use the pencil icon on GitHub to rename it.
-
-### 2. Check the File Path (Is it loose or inside a folder?)
-
-GitHub Pages expects `index.html` to be sitting right at the absolute root level of your repository branch.
-
-* If you uploaded a whole folder named `stickman-website` that holds all your files, your main link (`https://username.github.io/repository-name/`) will appear blank or show text because it can't find `index.html` at the front door.
-* **The Fix:** Move `index.html`, `sketch.js`, `style.css`, and `music5.csv` out of any subfolders so they are sitting loose on the main page of your repository. If they are nested inside a folder, your temporary URL to view it would actually be `https://username.github.io/repository-name/folder-name/`.
-
-### 3. Clear Your Browser Cache
-
-If you renamed the file recently and it still shows code, your browser is likely remembering the old text version. Hold `Ctrl` + `F5` (or `Cmd` + `Shift` + `R` on Mac) to force a hard refresh.
-
----
-
-### Cleaned-Up `sketch.js` Code (With the `modMod` Typo Fixed!)
-
-While you check your file names, make sure your `sketch.js` file has this completely fixed code block. I patched the `modMod` typo that was causing the script engine to break behind the scenes, and ensured it accurately targets your exact file (`music5.csv`):
-
-```javascript
 let table;
 let s_zoom, s_scale, s_variance, s_spread, s_height, s_steer, s_torsoSplit, s_armSplit, s_move, s_loudExp, s_bpmScale, s_complexity, s_gravity;
 let l_zoom, l_scale, l_variance, l_spread, l_height, l_steer, l_torsoSplit, l_armSplit, l_move, l_loudExp, l_bpmScale, l_complexity, l_gravity, l_syncTrack;
@@ -44,17 +14,19 @@ let rowTimeScores = [];
 let timeMatchedSong = "None"; 
 
 function preload() {
+  // Configured natively for your specific uploaded file
   table = loadTable('music5.csv', 'csv', 'header');
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  pixelDensity(displayDensity()); 
+  pixelDensity(displayDensity()); // High-DPI screen optimization
   
   let startX = 30, startY = 30, gap = 52; 
   
+  // --- ALL YOUR REVISED DEFAULTS CHOSEN APPLIED ---
   l_zoom = createP('').position(startX, startY - 15);
-  s_zoom = createSlider(0.1, 10.0, 1.0, 0.05).position(startX, startY + 15); 
+  s_zoom = createSlider(0.1, 10.0, 1.0, 0.05).position(startX, startY + 15); // UPDATED DEFAULT: 1.00x
   
   l_scale = createP('').position(startX, startY + gap - 15);
   s_scale = createSlider(0.01, 5.0, 0.56, 0.01).position(startX, startY + gap + 15);
@@ -66,7 +38,7 @@ function setup() {
   s_spread = createSlider(10, 1000, 310, 10).position(startX, startY + gap * 3 + 15);
   
   l_height = createP('').position(startX, startY + gap * 4 - 15);
-  s_height = createSlider(100, 3000, 1400, 10).position(startX, startY + gap * 4 + 15); 
+  s_height = createSlider(100, 3000, 1400, 10).position(startX, startY + gap * 4 + 15); // UPDATED DEFAULT: 1400
   
   l_steer = createP('').position(startX, startY + gap * 5 - 15);
   s_steer = createSlider(0, 10, 2.9, 0.1).position(startX, startY + gap * 5 + 15);
@@ -102,6 +74,7 @@ function setup() {
     l_complexity, s_complexity, l_gravity, s_gravity, l_syncTrack
   ];
 
+  // --- PRE-COMPUTE TIME SCORING MATRIX ---
   let rows = table.getRows();
   for (let i = 0; i < rows.length; i++) {
     let rawDateStr = rows[i].get('Added At') || rows[i].get('Timestamp') || rows[i].get('Date') || "";
@@ -115,6 +88,7 @@ function setup() {
     }
   }
 
+  // Spawns up high so it falls and lands smoothly onto its shock absorbers
   physY = -200; 
   physVy = 0;
 }
@@ -131,6 +105,7 @@ function draw() {
   let floorLine = s_height.value();
   let centerX = width / 2;
 
+  // --- 1. LIVE CLOCK LOOKUP ALGORITHM ---
   let currentSystemScore = (month() - 1) * 44640 + day() * 1440 + hour() * 60 + minute();
   let closestIndex = 0;
   let minimumDelta = Infinity;
@@ -144,6 +119,7 @@ function draw() {
     }
   }
 
+  // --- 2. MODULATE VALUES BASED ON NEAREST TIME TRACK ---
   let temporalTrack = rows[closestIndex];
   timeMatchedSong = temporalTrack ? (temporalTrack.get('Track Name') || "Row #" + closestIndex) : "None";
   
@@ -159,12 +135,14 @@ function draw() {
 
   let s = calculateRelativeSkeleton(rows);
 
+  // PREVIEW LIVE SKELETAL EXTENSION HEIGHT
   let leftLowest = getLowestLegPoint(s.leftLegChunks, time, moveInt, loudExp);
   let rightLowest = getLowestLegPoint(s.rightLegChunks, time, moveInt, loudExp);
   let maxLegExtension = max(leftLowest, rightLowest);
 
   let targetHipY = floorLine - maxLegExtension;
 
+  // --- 3. SUSPENSION SPRING MECHANICS PIPELINE ---
   if (physY < targetHipY) {
     physVy += gravForce * 0.5; 
     physY += physVy;
@@ -181,6 +159,7 @@ function draw() {
     squashFactor = constrain(squashFactor, 0.1, 1.0);
   }
 
+  // --- 4. ENGINE PRESENTATION MATRIX ---
   push();
   translate(centerX, height / 2);
   scale(zoomVal);
@@ -198,6 +177,7 @@ function draw() {
   
   let staticHipOffset = s.hipPos.y - s.bY;
 
+  // DRAW LEGS (Correct downward orientation)
   push();
   translate(0, staticHipOffset * squashFactor);
   scale(1, squashFactor);
@@ -205,6 +185,7 @@ function draw() {
   drawNestedChain({x:0, y:0}, s.rightLegChunks, time, moveInt, loudExp);
   pop();
 
+  // DRAW UPPER BODY
   push();
   translate(0, staticHipOffset * squashFactor);
   for (let chunk of s.torsoChunks) {
@@ -414,5 +395,3 @@ function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
   if (t >= 0 && t <= 1 && u >= 0 && u <= 1) return { x: x1 + t * (x2 - x1), y: y1 + t * (y2 - y1) };
   return null;
 }
-
-```
