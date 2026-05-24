@@ -1,12 +1,3 @@
-Here is your finalized, ultra-clean code block.
-
-I have completely stripped out the entire user interface creation setup, removed the text drawing labels, and disabled the mouse-click listener entirely. Now, the screen will render completely blank with **nothing but your high-quality, time-synced stickman** performing its physics suspension dance in the center of the window.
-
-Your custom parameters are hardcoded directly into the engine as the absolute global constants, including a starting zoom of **0.65x** and a floor elevation of **1170**.
-
-### Custom `sketch.js` (Art-Only Presentation Version)
-
-```javascript
 let table;
 
 // --- SUSPENSION PHYSICS SYSTEM VARIABLES ---
@@ -314,5 +305,3 @@ function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
   if (t >= 0 && t <= 1 && u >= 0 && u <= 1) return { x: x1 + t * (x2 - x1), y: y1 + t * (y2 - y1) };
   return null;
 }
-
-```
