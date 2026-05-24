@@ -1,8 +1,13 @@
-let table;
-let s_zoom, s_scale, s_variance, s_spread, s_height, s_steer, s_torsoSplit, s_armSplit, s_move, s_loudExp, s_bpmScale, s_complexity, s_gravity;
-let l_zoom, l_scale, l_variance, l_spread, l_height, l_steer, l_torsoSplit, l_armSplit, l_move, l_loudExp, l_bpmScale, l_complexity, l_gravity, l_syncTrack;
+Here is your finalized, ultra-clean code block.
 
-let uiElements = [];
+I have completely stripped out the entire user interface creation setup, removed the text drawing labels, and disabled the mouse-click listener entirely. Now, the screen will render completely blank with **nothing but your high-quality, time-synced stickman** performing its physics suspension dance in the center of the window.
+
+Your custom parameters are hardcoded directly into the engine as the absolute global constants, including a starting zoom of **0.65x** and a floor elevation of **1170**.
+
+### Custom `sketch.js` (Art-Only Presentation Version)
+
+```javascript
+let table;
 
 // --- SUSPENSION PHYSICS SYSTEM VARIABLES ---
 let physY = 0;         
@@ -13,8 +18,22 @@ let squashFactor = 1.0;
 let rowTimeScores = [];      
 let timeMatchedSong = "None"; 
 
+// --- ALL YOUR EXACT PREFERRED CONSTANTS HARDCODED ---
+const CONST_ZOOM = 0.65;          // Camera Zoom: 0.65x
+const CONST_SCALE = 0.56;         // Base Step Scale: 0.56
+const CONST_VARIANCE = 3.3;       // Data Step Variance: 3.3
+const CONST_SPREAD = 310;         // Leg Spread: 310
+const CONST_HEIGHT = 1170;        // Floor Elevation Line: 1170
+const CONST_STEER = 2.9;          // Steer Intensity: 2.9
+const CONST_TORSO_SPLIT = 0.06;   // Torso Length: 6.0%
+const CONST_ARM_SPLIT = 0.10;     // Arm Length: 10.0%
+const CONST_MOVE = 1.8;           // Motion Intensity Baseline: 1.8
+const CONST_LOUD_EXP = 1.0;       // Loudness Contrast Baseline: 1
+const CONST_BPM_SCALE = 1.0;      // BPM Multiplier: 1x
+const CONST_COMPLEXITY = 0.96;     // Rhythmic Drift: 96%
+const CONST_GRAVITY = 1.5;        // Gravity Force Acceleration: 1.5
+
 function preload() {
-  // Configured natively for your specific uploaded file
   table = loadTable('music5.csv', 'csv', 'header');
 }
 
@@ -22,58 +41,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   pixelDensity(displayDensity()); // High-DPI screen optimization
   
-  let startX = 30, startY = 30, gap = 52; 
-  
-  // --- ALL YOUR REVISED DEFAULTS CHOSEN APPLIED ---
-  l_zoom = createP('').position(startX, startY - 15);
-  s_zoom = createSlider(0.1, 10.0, 1.0, 0.05).position(startX, startY + 15); // UPDATED DEFAULT: 1.00x
-  
-  l_scale = createP('').position(startX, startY + gap - 15);
-  s_scale = createSlider(0.01, 5.0, 0.56, 0.01).position(startX, startY + gap + 15);
-  
-  l_variance = createP('').position(startX, startY + gap * 2 - 15);
-  s_variance = createSlider(0.0, 10.0, 3.3, 0.1).position(startX, startY + gap * 2 + 15);
-  
-  l_spread = createP('').position(startX, startY + gap * 3 - 15);
-  s_spread = createSlider(10, 1000, 310, 10).position(startX, startY + gap * 3 + 15);
-  
-  l_height = createP('').position(startX, startY + gap * 4 - 15);
-  s_height = createSlider(100, 3000, 1400, 10).position(startX, startY + gap * 4 + 15); // UPDATED DEFAULT: 1400
-  
-  l_steer = createP('').position(startX, startY + gap * 5 - 15);
-  s_steer = createSlider(0, 10, 2.9, 0.1).position(startX, startY + gap * 5 + 15);
-  
-  l_torsoSplit = createP('').position(startX, startY + gap * 6 - 15);
-  s_torsoSplit = createSlider(0.01, 0.8, 0.06, 0.01).position(startX, startY + gap * 6 + 15);
-
-  l_armSplit = createP('').position(startX, startY + gap * 7 - 15);
-  s_armSplit = createSlider(0.01, 0.9, 0.10, 0.01).position(startX, startY + gap * 7 + 15);
-
-  l_move = createP('').position(startX, startY + gap * 8 - 15);
-  s_move = createSlider(0, 5, 1.8, 0.1).position(startX, startY + gap * 8 + 15);
-
-  l_loudExp = createP('').position(startX, startY + gap * 9 - 15);
-  s_loudExp = createSlider(0.1, 10.0, 1.0, 0.1).position(startX, startY + gap * 9 + 15);
-
-  l_bpmScale = createP('').position(startX, startY + gap * 10 - 15);
-  s_bpmScale = createSlider(0.1, 10.0, 1.0, 0.1).position(startX, startY + gap * 10 + 15);
-
-  l_complexity = createP('').position(startX, startY + gap * 11 - 15);
-  s_complexity = createSlider(0, 1.0, 0.96, 0.01).position(startX, startY + gap * 11 + 15);
-
-  l_gravity = createP('').position(startX, startY + gap * 12 - 15);
-  s_gravity = createSlider(0.0, 5.0, 1.5, 0.1).position(startX, startY + gap * 12 + 15);
-
-  l_syncTrack = createP('').position(startX, startY + gap * 13 - 15);
-
-  uiElements = [
-    l_zoom, s_zoom, l_scale, s_scale, l_variance, s_variance,
-    l_spread, s_spread, l_height, s_height, l_steer, s_steer,
-    l_torsoSplit, s_torsoSplit, l_armSplit, s_armSplit,
-    l_move, s_move, l_loudExp, s_loudExp, l_bpmScale, s_bpmScale,
-    l_complexity, s_complexity, l_gravity, s_gravity, l_syncTrack
-  ];
-
   // --- PRE-COMPUTE TIME SCORING MATRIX ---
   let rows = table.getRows();
   for (let i = 0; i < rows.length; i++) {
@@ -94,15 +61,10 @@ function setup() {
 }
 
 function draw() {
-  background(255);
+  background(255); // Plain blank screen
   
-  let zoomVal = s_zoom.value();
   let time = millis() / 1000;
   let rows = table.getRows();
-  let baseMoveInt = s_move.value();
-  let baseLoudExp = s_loudExp.value();
-  let gravForce = s_gravity.value();
-  let floorLine = s_height.value();
   let centerX = width / 2;
 
   // --- 1. LIVE CLOCK LOOKUP ALGORITHM ---
@@ -126,12 +88,9 @@ function draw() {
   let timeEnergy = temporalTrack ? (float(temporalTrack.get('Energy')) || 0.5) : 0.5;
   let timeLoudness = temporalTrack ? (abs(float(temporalTrack.get('Loudness'))) || 10) : 10;
 
-  let moveInt = baseMoveInt * timeEnergy * 1.5; 
-  let loudExp = baseLoudExp * map(timeLoudness, 20, 0, 0.5, 2.0, true);
-
-  if (!fullscreen()) {
-    updateLabels(moveInt, loudExp);
-  }
+  // Dynamic values calculated behind the scenes purely relative to current clock time
+  let moveInt = CONST_MOVE * timeEnergy * 1.5; 
+  let loudExp = CONST_LOUD_EXP * map(timeLoudness, 20, 0, 0.5, 2.0, true);
 
   let s = calculateRelativeSkeleton(rows);
 
@@ -140,32 +99,32 @@ function draw() {
   let rightLowest = getLowestLegPoint(s.rightLegChunks, time, moveInt, loudExp);
   let maxLegExtension = max(leftLowest, rightLowest);
 
-  let targetHipY = floorLine - maxLegExtension;
+  let targetHipY = CONST_HEIGHT - maxLegExtension;
 
   // --- 3. SUSPENSION SPRING MECHANICS PIPELINE ---
   if (physY < targetHipY) {
-    physVy += gravForce * 0.5; 
+    physVy += CONST_GRAVITY * 0.5; 
     physY += physVy;
     squashFactor = 1.0; 
   } else {
     let displacement = physY - targetHipY;
     let springForce = -0.22 * displacement; 
     
-    physVy += springForce + (gravForce * 0.5); 
+    physVy += springForce + (CONST_GRAVITY * 0.5); 
     physVy *= 0.84; 
     physY += physVy;
 
-    squashFactor = (floorLine - physY) / maxLegExtension;
+    squashFactor = (CONST_HEIGHT - physY) / maxLegExtension;
     squashFactor = constrain(squashFactor, 0.1, 1.0);
   }
 
   // --- 4. ENGINE PRESENTATION MATRIX ---
   push();
   translate(centerX, height / 2);
-  scale(zoomVal);
+  scale(CONST_ZOOM);
   translate(-centerX, -height / 2);
 
-  noFill(); stroke(0); strokeWeight(1.5 / zoomVal); 
+  noFill(); stroke(0); strokeWeight(1.5 / CONST_ZOOM); 
   strokeJoin(ROUND); strokeCap(ROUND);
 
   let groundMotor = rows[s.meetingIdx];
@@ -177,7 +136,7 @@ function draw() {
   
   let staticHipOffset = s.hipPos.y - s.bY;
 
-  // DRAW LEGS (Correct downward orientation)
+  // DRAW LEGS
   push();
   translate(0, staticHipOffset * squashFactor);
   scale(1, squashFactor);
@@ -209,11 +168,10 @@ function draw() {
 
 function keyPressed() {
   if (key === ' ') {
-    let floorLine = s_height.value();
-    let leftLowest = getLowestLegPoint(calculateRelativeSkeleton(table.getRows()).leftLegChunks, millis()/1000, s_move.value(), s_loudExp.value());
-    let rightLowest = getLowestLegPoint(calculateRelativeSkeleton(table.getRows()).rightLegChunks, millis()/1000, s_move.value(), s_loudExp.value());
+    let leftLowest = getLowestLegPoint(calculateRelativeSkeleton(table.getRows()).leftLegChunks, millis()/1000, CONST_MOVE, CONST_LOUD_EXP);
+    let rightLowest = getLowestLegPoint(calculateRelativeSkeleton(table.getRows()).rightLegChunks, millis()/1000, CONST_MOVE, CONST_LOUD_EXP);
     let maxLegExtension = max(leftLowest, rightLowest);
-    let targetHipY = floorLine - maxLegExtension;
+    let targetHipY = CONST_HEIGHT - maxLegExtension;
 
     if (physY >= targetHipY - 15) {
       physVy = -25; 
@@ -260,28 +218,20 @@ function getOsc(track, t, intensity, phase, loudExp, interference = 1.0) {
   
   let normLoud = map(loud, 30, 0, 0, 1, true);
   let curvedLoud = pow(normLoud, loudExp);
-  let speed = s_bpmScale.value() * interference;
+  let speed = CONST_BPM_SCALE * interference;
   
   return sin(t * (bpm/60) * speed * TWO_PI + phase) * (curvedLoud * 0.02) * intensity;
 }
 
 function calculateRelativeSkeleton(rows) {
-  let scale = s_scale.value();
-  let variance = s_variance.value();
-  let spread = s_spread.value();
-  let bY = s_height.value();
-  let steerInt = s_steer.value();
-  let comp = s_complexity.value();
-  let cX = width / 2;
-
-  let lX = cX - spread, lY = bY, rX = cX + spread, rY = bY;
+  let lX = (width / 2) - CONST_SPREAD, lY = CONST_HEIGHT, rX = (width / 2) + CONST_SPREAD, rY = CONST_HEIGHT;
   let leftFull = [{x: lX, y: lY}], rightFull = [{x: rX, y: rY}];
-  let hipPos = { x: cX, y: bY }, meetingIdx = rows.length;
+  let hipPos = { x: width / 2, y: CONST_HEIGHT }, meetingIdx = rows.length;
 
   for (let i = 0; i < rows.length; i++) {
     let e = float(rows[i].get('Energy')), d = float(rows[i].get('Track Duration (ms)')), v = float(rows[i].get('Valence'));
-    let slen = scale * pow((e * (d/100000)), variance);
-    let sangle = (v - 0.5) * steerInt;
+    let slen = CONST_SCALE * pow((e * (d/100000)), CONST_VARIANCE);
+    let sangle = (v - 0.5) * CONST_STEER;
 
     let nX, nY, hit = null;
     if (i % 2 === 0) {
@@ -303,13 +253,13 @@ function calculateRelativeSkeleton(rows) {
   }
 
   let rem = rows.length - meetingIdx;
-  let tEnd = floor(meetingIdx + rem * s_torsoSplit.value());
-  let aEnd = floor(tEnd + rem * s_armSplit.value());
+  let tEnd = floor(meetingIdx + rem * CONST_TORSO_SPLIT);
+  let aEnd = floor(tEnd + rem * CONST_ARM_SPLIT);
 
-  let tPath = generatePath(rows, meetingIdx, tEnd, hipPos, -PI/2, scale, variance, steerInt);
-  let laPath = generatePath(rows, tEnd, aEnd, tPath[tPath.length-1], PI*0.8, scale, variance, steerInt, true);
-  let raPath = generatePath(rows, tEnd, aEnd, tPath[tPath.length-1], PI*0.2, scale, variance, steerInt, false);
-  let nPath = generatePath(rows, aEnd, rows.length, tPath[tPath.length-1], -PI/2, scale, variance, steerInt);
+  let tPath = generatePath(rows, meetingIdx, tEnd, hipPos, -PI/2, CONST_SCALE, CONST_VARIANCE, CONST_STEER);
+  let laPath = generatePath(rows, tEnd, aEnd, tPath[tPath.length-1], PI*0.8, CONST_SCALE, CONST_VARIANCE, CONST_STEER, true);
+  let raPath = generatePath(rows, tEnd, aEnd, tPath[tPath.length-1], PI*0.2, CONST_SCALE, CONST_VARIANCE, CONST_STEER, false);
+  let nPath = generatePath(rows, aEnd, rows.length, tPath[tPath.length-1], -PI/2, CONST_SCALE, CONST_VARIANCE, CONST_STEER);
 
   const toRel = (path, rStart, rEnd, count, rev, limbId) => {
     let chunks = [];
@@ -322,14 +272,14 @@ function calculateRelativeSkeleton(rows) {
       let origin = sub[0];
       let relPath = sub.map(pt => ({x: pt.x - origin.x, y: pt.y - origin.y}));
       let motorRow = rows[constrain(rStart + floor((rEnd-rStart)/count)*i, 0, rows.length-1)];
-      let interference = 1.0 + ((i + limbId * 0.73) % 1.0 - 0.5) * comp; 
+      let interference = 1.0 + ((i + limbId * 0.73) % 1.0 - 0.5) * CONST_COMPLEXITY; 
       chunks.push({ relPath, motorRow, phase: i * PI/6, interference });
     }
     return chunks;
   };
 
   return {
-    bY, hipPos, meetingIdx,
+    bY: CONST_HEIGHT, hipPos, meetingIdx,
     leftLegChunks: toRel(leftFull, 0, meetingIdx, 8, true, 1),
     rightLegChunks: toRel(rightFull, 0, meetingIdx, 8, true, 2),
     torsoChunks: toRel(tPath, meetingIdx, tEnd, 8, false, 3),
@@ -352,39 +302,8 @@ function generatePath(rows, start, end, origin, baseAngle, scale, variance, stee
   return path;
 }
 
-function updateLabels(modMove, modLoud) {
-  l_zoom.html("<b>Camera Zoom:</b> " + nfc(s_zoom.value(), 2) + "x");
-  l_scale.html("<b>Base Step Scale:</b> " + s_scale.value());
-  l_variance.html("<b>Data Step Variance:</b> " + s_variance.value());
-  l_spread.html("<b>Leg Spread:</b> " + s_spread.value());
-  l_height.html("<b>Floor Elevation Line:</b> " + s_height.value());
-  l_steer.html("<b>Steer Intensity:</b> " + s_steer.value());
-  l_torsoSplit.html("<b>Torso Length:</b> " + nfc(s_torsoSplit.value() * 100, 1) + "%");
-  l_armSplit.html("<b>Arm Length:</b> " + nfc(s_armSplit.value() * 100, 1) + "%");
-  
-  l_move.html("<b>Motion Intensity:</b> " + s_move.value() + " (Live: " + nfc(modMove, 2) + ")");
-  l_loudExp.html("<b>Loudness Contrast:</b> " + s_loudExp.value() + " (Live: " + nfc(modLoud, 2) + ")");
-  
-  l_bpmScale.html("<b>BPM Multiplier:</b> " + s_bpmScale.value() + "x");
-  l_complexity.html("<b>Rhythmic Drift:</b> " + nfc(s_complexity.value() * 100, 0) + "%");
-  l_gravity.html("<b>Gravity Force Acceleration:</b> " + s_gravity.value());
-  
-  l_syncTrack.html("<b>Clock Sync Track:</b> <br><span style='color:#1DB954; font-weight:bold;'>" + timeMatchedSong + "</span>");
-}
-
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  for (let element of uiElements) {
-    if (fullscreen()) element.hide();
-    else element.show();
-  }
-}
-
-function mousePressed() {
-  if (fullscreen() || mouseX > 250) {
-    let fs = fullscreen();
-    fullscreen(!fs);
-  }
 }
 
 function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
@@ -395,3 +314,5 @@ function intersect(x1, y1, x2, y2, x3, y3, x4, y4) {
   if (t >= 0 && t <= 1 && u >= 0 && u <= 1) return { x: x1 + t * (x2 - x1), y: y1 + t * (y2 - y1) };
   return null;
 }
+
+```
